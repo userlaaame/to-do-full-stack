@@ -20,6 +20,13 @@ export default function App() {
   return (
     <div>
       Hello World!
+      <ul>
+        {todos.map((todo) => 
+        <li key={todo._id}>
+          {todo.text}
+        </li>
+      )}
+      </ul>
     </div>
   )
 }
