@@ -5,7 +5,7 @@ import cors from 'cors';
 
 import connectDB from './db.js';
 
-import Todo from './models/todo.js'
+import todoRoutes from './routes/todo.js'
 
 const app = express();
 
@@ -17,40 +17,10 @@ app.use(cors());
 // format incoming data to json
 app.use(express.json());
 
-//get todos
-app.get('/api/todos', async (req, res) => {
-    try {
-        const todos = await Todo.find({});
-        res.json(todos);
-    } catch (e) {
-        console.error('Error fetching todos:', e);
-        res.status(500).json({ error: e.message });
-    }
-})
+//bring in the todo routes
+app.use('/api/todos', todoRoutes)
 
-// POST create a todo
-app.post('/api/todos', async (req, res) => {
-    try {
-        console.log(req.body);
-        const todo = await Todo.create(req.body);
-        res.json(todo);
-    } catch (e) {
-        console.error('Error creating todo:', e);
-        res.status(500).json({ error: e.message });
-    }
-})
-
-app.delete('/api/todos/:id', async (req, res) => {
-    try {
-        const result = await Todo.findByIdAndDelete(req.params.id);
-        console.log(result);
-        res.json(result);
-    } catch(e) {
-        console.error('Error deleting todo:', e);
-        res.status(500).json({ error: e.message });
-    }
-})
-
+//start the server
 const startServer = async () => {
     await connectDB();
     app.listen(port, () => {

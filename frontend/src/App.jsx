@@ -6,10 +6,14 @@ export default function App() {
   const inputRef = useRef();
 
   async function getData() {
-    const response = await fetch('http://localhost:3000/api/todos');
-    const data = await response.json();
-    console.log(data);
-    setTodos(data);
+    try {
+      const response = await fetch('http://localhost:3000/api/todos');
+      const data = await response.json();
+      console.log(data);
+      setTodos(data);
+    } catch (e) {
+      console.error('Error fetching todos:', e);
+    }
   }
 
   useEffect(() => {
@@ -37,17 +41,13 @@ export default function App() {
 
     console.log(todo);
 
-    //resets the input;s value
+    //resets the input's value
     inputRef.current.value = "";
     //focus on the input
     inputRef.current.focus();
 
-    //retrieve our latest data again
-    getData();
-
     // updating the state with our new todo
-    // setTodos([...todos, newTodo]);
-
+    setTodos([...todos, newTodo]);
   }
 
   async function handleDelete(id) {
@@ -60,21 +60,41 @@ export default function App() {
     // remove the deleted todo from state
     setTodos(todos.filter(todo => todo._id !== id));
 
-    //remove the todo item from our state
+    //retrieve our latest data again
+    getData();
+  }
+
+  async function handleUpdate(id) {
+
+    //find the todo in our state
+    const todo = todos.find((todo) => todo._id === id);
+
+    //update the value of the completed property
+    todo.completed = !todo.completed
+
+    //send the updated todo to our PUT request
+    const response = await fetch(`http://localhost:3000/api/todos/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify(todo),
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
+
+    console.log(response);
+
+    //retrieve our latest data again
+    getData();
   }
 
   return (
     <div>
-
-
       <h1>To-Do List</h1>
-
 
       <form onSubmit={handleSubmit}>
         <input type="text" ref={inputRef} />
         <button>Submit</button>
       </form>
-
 
       <ul>
         {todos.map((todo) =>
@@ -82,7 +102,7 @@ export default function App() {
             <input
               type="checkbox"
               checked={todo.completed}
-              onChange={() => { }}
+              onChange={() => handleUpdate(todo._id)}
             />
             {todo.text}
             <button onClick={() => handleDelete(todo._id)}>x</button>
