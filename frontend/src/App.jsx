@@ -46,11 +46,19 @@ export default function App() {
 
   }
 
-  return (
+  function handleDelete(id) {
+    console.log(id);
+    //delete the todo we clicked on using its id
+    fetch('http://localhost:3000/api/todos/${id}', {
+      method: 'DELETE'
+    });
+  }
+
+    return (
     <div>
 
 
-      <h1>Todos</h1>
+      <h1>To-Do List</h1>
 
 
       <form onSubmit={handleSubmit}>
@@ -68,6 +76,7 @@ export default function App() {
               onChange={() => { }}
             />
             {todo.text}
+            <button onClick={() => handleDelete(todo._id)}>x</button>
           </li>
         )}
       </ul>
