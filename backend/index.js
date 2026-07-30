@@ -15,11 +15,20 @@ const port = 3000;
 app.use(cors());
 
 app.get('/api/todos', async (req, res) => {
-    const todos = await Todo.find({});
-    res.json(todos);
+    try {
+        const todos = await Todo.find({});
+        res.json(todos);
+    } catch(e) {
+        console.error('Error fetching todos:', e);
+        res.status(500).json({ error: e.message });
+    }
 })
 
-app.listen(port, () => {
-    console.log('Listening on port: ', port);
-    connectDB();
-})
+const startServer = async () => {
+    await connectDB();
+    app.listen(port, () => {
+        console.log('Listening on port: ', port);
+    })
+}
+
+startServer();
