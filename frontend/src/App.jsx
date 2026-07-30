@@ -1,14 +1,14 @@
 import { useEffect } from "react";
 
-export default function app() {
+export default function App() {
 
   async function test() {
-    const response = await fetch('http://localhost:3000/');
-    const data = response.json();
+    const response = await fetch('http://localhost:3000/test');
+    const data = await response.json();
     console.log(data);
   }
 
-  useEffect(() => { 
+  useEffect(() => {
     test();
   }, []);
 
