@@ -42,19 +42,28 @@ export default function App() {
     //focus on the input
     inputRef.current.focus();
 
-    setTodos([...todos, newTodo]);
+    //retrieve our latest data again
+    getData();
+
+    // updating the state with our new todo
+    // setTodos([...todos, newTodo]);
 
   }
 
-  function handleDelete(id) {
+  async function handleDelete(id) {
     console.log(id);
     //delete the todo we clicked on using its id
-    fetch('http://localhost:3000/api/todos/${id}', {
+    await fetch(`http://localhost:3000/api/todos/${id}`, {
       method: 'DELETE'
     });
+
+    // remove the deleted todo from state
+    setTodos(todos.filter(todo => todo._id !== id));
+
+    //remove the todo item from our state
   }
 
-    return (
+  return (
     <div>
 
 

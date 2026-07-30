@@ -34,8 +34,19 @@ app.post('/api/todos', async (req, res) => {
         console.log(req.body);
         const todo = await Todo.create(req.body);
         res.json(todo);
-    } catch(e) {
+    } catch (e) {
         console.error('Error creating todo:', e);
+        res.status(500).json({ error: e.message });
+    }
+})
+
+app.delete('/api/todos/:id', async (req, res) => {
+    try {
+        const result = await Todo.findByIdAndDelete(req.params.id);
+        console.log(result);
+        res.json(result);
+    } catch(e) {
+        console.error('Error deleting todo:', e);
         res.status(500).json({ error: e.message });
     }
 })
