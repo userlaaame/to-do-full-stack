@@ -26,6 +26,20 @@ function handleSubmit(e) {
 
     console.log(todo);
   // send this data as a POST request
+  const response = await fetch('http://localhost:3000/api/todos', {
+    method: 'POST',
+    body: JSON.stringify(todo),
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  }) 
+
+  const newTodo = await response.json();
+
+  console.log(todo);
+
+
+
 }
 
   return (
