@@ -16,31 +16,35 @@ export default function App() {
     getData();
   }, []);
 
-function handleSubmit(e) {
-  e.preventDefault();
+  async function handleSubmit(e) {
+    e.preventDefault();
 
-  // packages up the todo with a input value
-  const todo = {
-    text: inputRef.current.value
-  };
+    // packages up the todo with a input value
+    const todo = {
+      text: inputRef.current.value
+    };
+
+    // send this data as a POST request
+    const response = await fetch('http://localhost:3000/api/todos', {
+      method: 'POST',
+      body: JSON.stringify(todo),
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
+
+    const newTodo = await response.json();
 
     console.log(todo);
-  // send this data as a POST request
-  const response = await fetch('http://localhost:3000/api/todos', {
-    method: 'POST',
-    body: JSON.stringify(todo),
-    headers: {
-      'Content-Type': 'application/json'
-    }
-  }) 
 
-  const newTodo = await response.json();
+    //resets the input;s value
+    inputRef.current.value = "";
+    //focus on the input
+    inputRef.current.focus();
 
-  console.log(todo);
+    setTodos([...todos, newTodo]);
 
-
-
-}
+  }
 
   return (
     <div>
@@ -56,12 +60,16 @@ function handleSubmit(e) {
 
 
       <ul>
-        {todos.map((todo) => 
-        <li key={todo._id}>
-          <input type="checkbox" checked={todo.completed} />
-          {todo.text}
-        </li>
-      )}
+        {todos.map((todo) =>
+          <li key={todo._id}>
+            <input
+              type="checkbox"
+              checked={todo.completed}
+              onChange={() => { }}
+            />
+            {todo.text}
+          </li>
+        )}
       </ul>
     </div>
   )

@@ -30,9 +30,14 @@ app.get('/api/todos', async (req, res) => {
 
 // POST create a todo
 app.post('/api/todos', async (req, res) => {
-    console.log(req.body);
-    const todo = await Todo.create(req.body);
-    res.json(todos);
+    try {
+        console.log(req.body);
+        const todo = await Todo.create(req.body);
+        res.json(todo);
+    } catch(e) {
+        console.error('Error creating todo:', e);
+        res.status(500).json({ error: e.message });
+    }
 })
 
 const startServer = async () => {
