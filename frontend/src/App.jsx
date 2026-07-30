@@ -1,9 +1,9 @@
-import { useState } from "react";
-import { useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 
 export default function App() {
 
   const [todos, setTodos] = useState([]);
+  const inputRef = useRef();
 
   async function getData() {
     const response = await fetch('http://localhost:3000/api/todos');
@@ -16,13 +16,35 @@ export default function App() {
     getData();
   }, []);
 
+function handleSubmit(e) {
+  e.preventDefault();
+
+  // packages up the todo with a input value
+  const todo = {
+    text: inputRef.current.value
+  };
+
+    console.log(todo);
+  // send this data as a POST request
+}
 
   return (
     <div>
-      Hello World!
+
+
+      <h1>Todos</h1>
+
+
+      <form onSubmit={handleSubmit}>
+        <input type="text" ref={inputRef} />
+        <button>Submit</button>
+      </form>
+
+
       <ul>
         {todos.map((todo) => 
         <li key={todo._id}>
+          <input type="checkbox" checked={todo.completed} />
           {todo.text}
         </li>
       )}
